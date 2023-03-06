@@ -1,5 +1,6 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
+from urllib import parse
 import ssl
 import time
 
@@ -9,16 +10,62 @@ import Log
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(b"Hello World !")
+        parsed_path = parse.urlparse(self.path)
+        if (parsed_path.path.startswith('/api/')):
+            self.do_API(parsed_path.path)
+            return
+
+        if (parsed_path.path == '/'):
+            # give user.html or login.html
+            # up to cookie
+            self.send_response(418)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(b"Hello World !")
+            ...
+        else:
+            # return file in html folder
+            requirePath = parsed_path.path[1:]
+            try:
+                f = open("html/" + requirePath, 'rb')
+                self.send_response(200)
+
+                # decode require file type
+                requireFileType = requirePath.split('.')
+                try:
+                    ret = {
+                        'html': 'text/html',
+                        'css': 'text/css',
+                        'js': 'text/javascript',
+                        'png': 'image/png',
+                        'jpg': 'image/jpg',
+                        'ico': 'image/ico'
+                    }[requireFileType[-1]]
+                except KeyError:
+                    ret = 'text/html'
+
+                self.send_header("Content-type", ret)
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
+            except Exception as e:
+                print(e)
+                self.send_response(404)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(b"404 Not Found")
 
     def do_POST(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
         self.wfile.write(b"Hello World !")
+
+    def do_API(self, path):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(b"Hello World API !")
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):

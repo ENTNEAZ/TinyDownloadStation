@@ -5,7 +5,7 @@ import ssl
 import time
 
 import config
-import Log
+import util.Log as Log
 
 
 class Handler(BaseHTTPRequestHandler):

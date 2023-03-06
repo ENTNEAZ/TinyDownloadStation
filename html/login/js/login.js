@@ -13,6 +13,8 @@ function generateHash(password) {
         char = password.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
         hash = hash & hash; // Convert to 32bit integer
+        ret = md5(hash + "NaCl");
     }
-    return hash;
+
+    return ret;
 }

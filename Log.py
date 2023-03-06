@@ -32,5 +32,5 @@ class LoggerBasic:
         self.basicLog('['+ip+']'+username+' downloaded file: '+fileName)
 
     def close(self):
-        self.openFile.close()
         self.basicLog('Log file closed')
+        self.openFile.close()

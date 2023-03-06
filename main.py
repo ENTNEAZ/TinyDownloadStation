@@ -6,6 +6,12 @@ import time
 
 import config
 import util.Log as Log
+from util.UserHelper import UserHelper
+
+# logger
+log = None
+# userHelper
+userHelper = None
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -62,6 +68,9 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(b"Hello World !")
 
     def do_API(self, path):
+        # path example : /api/xxx/xxx/xxx
+        path = path.split('/')
+
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
@@ -73,12 +82,14 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 if __name__ == '__main__':
-    log = None
     try:
         t = str(time.ctime())
         t = t.replace(' ', '_')
         t = t.replace(':', '-')
-        log = Log.LoggerBasic("log/", t + ".log")
+        log = Log.LoggerBasic(config.logPath, t + ".log")
+
+        userHelper = UserHelper(
+            config.userPasswordFilePath, config.userCookieFilePath)
     except Exception as e:
         print(e)
         raise e

@@ -4,6 +4,10 @@ keyfile = ''
 certfile = ''
 
 # user database file path
-userPasswordFilePath = 'userPassword.json'
-userCookieFilePath = 'userCookie.json'
+userPasswordFilePath = 'userData/userPassword.json'
+userCookieFilePath = 'userData/userCookie.json'
 userCookieExpireTime = 60 * 60 * 24 * 7  # 7 days
+
+
+# log path
+logPath = 'log/'

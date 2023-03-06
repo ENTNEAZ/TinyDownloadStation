@@ -4,8 +4,6 @@ body {
     height: 100%;
     display: flex;
     justify-content: center;
-    background: url(../../../pic/background.png) no-repeat;
-    background-size: 100%;
     display: flex;
     flex: 1;
     justify-content: center;

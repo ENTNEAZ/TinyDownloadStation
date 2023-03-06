@@ -7,7 +7,7 @@ import time
 import config
 import util.Log as Log
 from util.UserHelper import UserHelper
-
+import util.ParseAPI as ParseAPI
 # logger
 log = None
 # userHelper
@@ -18,7 +18,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed_path = parse.urlparse(self.path)
         if (parsed_path.path.startswith('/api/')):
-            self.do_API(parsed_path.path)
+            self.do_API(parsed_path.path, parsed_path.query)
             return
 
         if (parsed_path.path == '/'):
@@ -67,14 +67,10 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"Hello World !")
 
-    def do_API(self, path):
-        # path example : /api/xxx/xxx/xxx
-        path = path.split('/')
-
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(b"Hello World API !")
+    def do_API(self, path, query):
+        # path example : /api/xxx/xxx/xxx?xxx=xxx&xxx=xxx
+        apiName = path.split('/')[2]
+        ParseAPI.api(self, apiName, query)
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):

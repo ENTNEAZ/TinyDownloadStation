@@ -6,6 +6,9 @@ class LoggerBasic:
     filePath = None
     openFile = None
 
+    # static instance
+    instance = None
+
     def __init__(self, filePath: str, fileName: str):
         self.fileName = fileName
         self.filePath = filePath
@@ -14,6 +17,7 @@ class LoggerBasic:
         except Exception as e:
             print(e)
             raise e
+        LoggerBasic.instance = self
 
     def basicLog(self, msg):
         print(msg)
@@ -34,3 +38,7 @@ class LoggerBasic:
     def close(self):
         self.basicLog('Log file closed')
         self.openFile.close()
+
+    @classmethod
+    def getInstance():
+        return LoggerBasic.instance

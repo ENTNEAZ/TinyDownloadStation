@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>登录页面</title>
+        <link rel="icon" href="/pic/favicon.ico" />
+    </head>
+    <script src="../jslib/jquery-3.5.1.min.js"></script>
+    <script src="./js/login.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/login.css">
+    <link rel="stylesheet" type="text/css" href="./css/body.css">
+    <body style="min-width:1489px;max-width:1489px">
+        <div class="login">
+            <h2>账号密码登录</h2>
+            <div class="login_form">
+                <span>账号：</span>
+                <input id="username" type="text" placeholder="请输入账号">
+                <br>
+                <span>密码：</span>
+                <input id="password" type="password" placeholder="请输入密码">
+            </div>
+            <div class="btn">
+                <button class="login_btn" onclick="login()">登录</button>
+        </div>
+    </body>
+</html>

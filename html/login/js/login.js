@@ -2,7 +2,7 @@ function login() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     var data = "username=" + username + "&hashPassword=" + generateHash(password);
-    window.location.href = "https://download.dragon.hotdoge.cn/api/login?" + data;
+    window.location.href = "/api/login?" + data;
 }
 
 function generateHash(password) {

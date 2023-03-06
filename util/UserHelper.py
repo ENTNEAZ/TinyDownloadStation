@@ -34,5 +34,8 @@ class UserHelper:
         json.dump(self.userPasswordDict, open(self.userPath, 'w'))
         json.dump(self.userCookieDict, open(self.cookiePath, 'w'))
 
+    def close(self):
+        self.saveAll()
+
     def addUser(self, username, hashPassword):
         self.userPasswordDict[username] = hashPassword

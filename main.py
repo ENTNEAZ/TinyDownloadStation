@@ -113,6 +113,7 @@ if __name__ == '__main__':
         log.basicLog('Server stopped by user')
         server.socket.close()
         log.close()
+        userHelper.close()
         exit(0)
     except Exception as e:
         print(e)

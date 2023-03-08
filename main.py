@@ -4,6 +4,7 @@ from urllib import parse
 import ssl
 import time
 import cgi
+import os
 
 import config_test as config
 import util.Log as Log
@@ -74,6 +75,46 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Location", "/login/login.html")
                 self.end_headers()
                 self.wfile.write(b"Login")
+        elif (parsed_path.path.startswith('/download/')):
+            # !!no cookie check
+            fileName = parsed_path.path.split('/')[-1]
+            fileName = parse.unquote(fileName)
+            print(fileName)
+            if not (fileName in FileHelper.fileList):
+                self.send_response(404)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(b"404 Not Found")
+                return
+            with open('download/' + fileName, 'rb') as f:
+                ran = self.headers.get('Range')
+                if ran is None:
+                    self.send_response(200)
+                    self.send_header(
+                        "Content-type", "application/octet-stream")
+                    self.send_header("Content-Disposition",
+                                     "attachment; filename=" + fileName)
+                    self.end_headers()
+                    self.wfile.write(f.read())
+                else:
+                    print(ran)
+                    fileSize = os.path.getsize("download/" + fileName)
+                    ran = ran.split('=')[1]
+                    ran = ran.split('-')
+                    ran[1] = int(ran[1]) if ran[1] != '' else fileSize - 1
+                    ran[0] = int(ran[0]) if ran[0] != '' else fileSize - ran[1]
+                    self.send_response(206)
+                    self.send_header(
+                        "Content-type", "application/octet-stream")
+                    self.send_header("Content-Disposition",
+                                     "attachment; filename=" + fileName)
+                    self.send_header(
+                        "Content-Range", "bytes " + str(ran[0]) + "-" + str(ran[1]) + "/" + str(fileSize))
+                    self.send_header("Accept-Ranges", "bytes")
+                    self.end_headers()
+                    f.seek(ran[0])
+                    self.wfile.write(f.read(ran[1] - ran[0] + 1))
+
         else:
             # return file in html folder
             requirePath = parsed_path.path[1:]

@@ -245,12 +245,13 @@ if __name__ == '__main__':
     try:
         log.basicLog('Server started')
         server = ThreadedHTTPServer(('127.0.0.1', config.port), Handler)
-        server.socket = ssl.wrap_socket(
-            server.socket,
-            keyfile=config.keyfile,
-            certfile=config.certfile,
-            server_side=True
-        )
+        if (config.keyfile != '' and config.certfile != ''):
+            server.socket = ssl.wrap_socket(
+                server.socket,
+                keyfile=config.keyfile,
+                certfile=config.certfile,
+                server_side=True
+            )
         print('[HttpServer]Starting server, use <Ctrl-C> to stop')
         server.serve_forever()
 

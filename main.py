@@ -4,7 +4,7 @@ from urllib import parse
 import ssl
 import time
 
-import config
+import config_test as config
 import util.Log as Log
 from util.UserHelper import UserHelper
 import util.ParseAPI as ParseAPI
@@ -117,4 +117,5 @@ if __name__ == '__main__':
         log.basicLog(e)
         server.socket.close()
         log.close()
+        userHelper.close()
         exit(-1)

@@ -55,6 +55,6 @@ class UserHelper:
         self.userCookieDict[cookie] = username
         return cookie
 
-    @ classmethod
-    def getInstance(self):
+    @staticmethod
+    def getInstance():
         return UserHelper.instance

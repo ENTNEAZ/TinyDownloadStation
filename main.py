@@ -3,11 +3,13 @@ from socketserver import ThreadingMixIn
 from urllib import parse
 import ssl
 import time
+import cgi
 
 import config_test as config
 import util.Log as Log
 from util.UserHelper import UserHelper
 import util.ParseAPI as ParseAPI
+import util.FileHelper as FileHelper
 # logger
 log = None
 # userHelper
@@ -60,7 +62,7 @@ class Handler(BaseHTTPRequestHandler):
             # check cookie
             if not (userHelper.getInstance().getUserOfCookie(realCookie) is None):
                 # return user.html
-                with open("html/user.html", 'rb') as f:
+                with open("html/user/user.html", 'rb') as f:
                     self.send_response(200)
                     self.send_header("Content-type", "text/html")
                     self.end_headers()
@@ -105,10 +107,77 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(b"404 Not Found")
 
     def do_POST(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(b"Hello World !")
+        # correct ip
+
+        if (self.client_address[0] == "127.0.0.1"):
+            try:
+                IP_addr = self.headers.get('Ali-CDN-Real-IP')
+                if IP_addr is None:
+                    IP_addr = self.headers.get('X-Forwarded-For')
+                if IP_addr is None:
+                    IP_addr = self.headers.get('X-Real-IP')
+                if IP_addr is None:
+                    IP_addr = self.client_address[0]
+                self.client_address = (IP_addr, self.client_address[1])
+            except Exception as e:
+                ...
+
+        parsed_path = parse.urlparse(self.path)
+        if (parsed_path.path.startswith('/upload')):
+            # upload file
+            # save file
+            formdata = cgi.FieldStorage(
+                fp=self.rfile,
+                headers=self.headers,
+                environ={'REQUEST_METHOD': 'POST'}
+            )
+
+            cookie = self.headers.get('Cookie')
+            if cookie is None:
+                self.send_response(302)
+                self.send_header("Content-type", "text/html")
+                self.send_header("Location", "/login/login.html")
+                self.end_headers()
+                self.wfile.write(b"Login")
+                return
+            cookie = cookie.split(';')
+            realCookie = ''
+            for i in cookie:
+                i = i.strip()
+                if i.startswith('userSessionID='):
+                    realCookie = i.split('=')[1]
+                    break
+            # check cookie
+            username = userHelper.getInstance().getUserOfCookie(realCookie)
+            if not (username is None):
+                # parse file name
+                fileName = formdata['filename']
+                fileContent = formdata['file']
+
+                # save file
+                fileName = fileName.value
+                with open('download/' + fileName, 'wb') as f:
+                    f.write(fileContent.file.read())
+
+                log.uploadLog(
+                    self.client_address[0], username, fileName)
+                FileHelper.addFile(fileName)
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(b"Upload Success")
+            else:
+                # return login.html
+                self.send_response(302)
+                self.send_header("Content-type", "text/html")
+                self.send_header("Location", "/login/login.html")
+                self.end_headers()
+                self.wfile.write(b"Login")
+        else:
+            self.send_response(404)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(b"404 Not Found")
 
     def do_API(self, path, query):
         # path example : /api/xxx/xxx/xxx?xxx=xxx&xxx=xxx
@@ -129,6 +198,8 @@ if __name__ == '__main__':
 
         userHelper = UserHelper(
             config.userPasswordFilePath, config.userCookieFilePath)
+
+        FileHelper.init()
     except Exception as e:
         print(e)
         raise e

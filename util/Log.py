@@ -20,9 +20,9 @@ class LoggerBasic:
         LoggerBasic.instance = self
 
     def basicLog(self, msg):
-        msg = '[' + time.ctime() + '] ' + msg + '\n'
+        msg = '[' + time.ctime() + '] ' + msg
         print(msg)
-        self.openFile.write(msg)
+        self.openFile.write(msg + '\n')
 
     def loginLog(self, ip: str, username: str, success: bool):
         if success:

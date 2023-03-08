@@ -24,7 +24,7 @@ class UserHelper:
         else:
             return False
 
-    def getUserOfCookie(self, cookie) -> str:
+    def getUserOfCookie(self, cookie: str) -> str:
         # return None if not found
         if cookie in self.userCookieDict:
             return self.userCookieDict[cookie]

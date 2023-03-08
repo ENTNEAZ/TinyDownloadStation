@@ -3,7 +3,7 @@ import util.UserHelper as UserHelper
 import time
 
 
-import config
+import config_test as config
 
 
 def api(http, api: str, query: str):
@@ -26,11 +26,12 @@ def login(http, query: dict):
         http.send_response(302)
         http.send_header("Content-type", "text/html")
         # add cookie
-        cookie = "user_session=" + UserHelper.UserHelper.getInstance().summonCookieForUser(query['username'][0]) +\
+        cookie = "userSessionID=" + UserHelper.UserHelper.getInstance().summonCookieForUser(query['username'][0]) +\
             ";domain=" + config.domain + \
             ";samesite=none;secure;expires=" + \
             time.strftime("%a, %d-%b-%Y %H:%M:%S GMT", time.gmtime(
-                time.time() + config.userCookieExpireTime))
+                time.time() + config.userCookieExpireTime)) + ";" + \
+            "path=/"
 
         http.send_header("Set-Cookie", cookie)
         http.send_header("Location", "/login/loginSuccess.html")

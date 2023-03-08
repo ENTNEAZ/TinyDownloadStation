@@ -24,11 +24,38 @@ class Handler(BaseHTTPRequestHandler):
         if (parsed_path.path == '/'):
             # give user.html or login.html
             # up to cookie
-            self.send_response(418)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(b"Hello World !")
-            ...
+            # parse cookie
+            cookie = self.headers.get('Cookie')
+            if cookie is None:
+                self.send_response(302)
+                self.send_header("Content-type", "text/html")
+                self.send_header("Location", "/login/login.html")
+                self.end_headers()
+                self.wfile.write(b"Login")
+                return
+            cookie = cookie.split(';')
+            realCookie = ''
+            for i in cookie:
+                i = i.strip()  # reduce space
+                if i.startswith('userSessionID='):
+                    print(realCookie)
+                    realCookie = i.split('=')[1]
+                    break
+            # check cookie
+            if not (userHelper.getInstance().getUserOfCookie(realCookie) is None):
+                # return user.html
+                with open("html/user.html", 'rb') as f:
+                    self.send_response(200)
+                    self.send_header("Content-type", "text/html")
+                    self.end_headers()
+                    self.wfile.write(f.read())
+            else:
+                # return login.html
+                self.send_response(302)
+                self.send_header("Content-type", "text/html")
+                self.send_header("Location", "/login/login.html")
+                self.end_headers()
+                self.wfile.write(b"Login")
         else:
             # return file in html folder
             requirePath = parsed_path.path[1:]

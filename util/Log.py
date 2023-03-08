@@ -20,8 +20,9 @@ class LoggerBasic:
         LoggerBasic.instance = self
 
     def basicLog(self, msg):
+        msg = '[' + time.ctime() + '] ' + msg + '\n'
         print(msg)
-        self.openFile.write('[' + time.ctime() + '] ' + msg + '\n')
+        self.openFile.write(msg)
 
     def loginLog(self, ip: str, username: str, success: bool):
         if success:
@@ -39,6 +40,6 @@ class LoggerBasic:
         self.basicLog('Log file closed')
         self.openFile.close()
 
-    @classmethod
+    @staticmethod
     def getInstance():
         return LoggerBasic.instance

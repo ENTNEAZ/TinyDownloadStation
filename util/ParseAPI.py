@@ -4,6 +4,7 @@ import time
 
 
 import config_test as config
+from . import Log
 
 
 def api(http, api: str, query: str):
@@ -22,6 +23,8 @@ def api(http, api: str, query: str):
 def login(http, query: dict):
     result = UserHelper.UserHelper.getInstance().checkUser(
         query['username'][0], query['hashPassword'][0])
+    Log.LoggerBasic.getInstance().loginLog(
+        ip=http.client_address[0], username=query['username'][0], success=result)
     if result:
         http.send_response(302)
         http.send_header("Content-type", "text/html")

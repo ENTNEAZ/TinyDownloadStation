@@ -15,7 +15,23 @@ userHelper = None
 
 
 class Handler(BaseHTTPRequestHandler):
+
     def do_GET(self):
+        # correct ip
+
+        if (self.client_address[0] == "127.0.0.1"):
+            try:
+                IP_addr = self.headers.get('Ali-CDN-Real-IP')
+                if IP_addr is None:
+                    IP_addr = self.headers.get('X-Forwarded-For')
+                if IP_addr is None:
+                    IP_addr = self.headers.get('X-Real-IP')
+                if IP_addr is None:
+                    IP_addr = self.client_address[0]
+                self.client_address = (IP_addr, self.client_address[1])
+            except Exception as e:
+                ...
+
         parsed_path = parse.urlparse(self.path)
         if (parsed_path.path.startswith('/api/')):
             self.do_API(parsed_path.path, parsed_path.query)

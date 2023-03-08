@@ -3,7 +3,7 @@ import util.UserHelper as UserHelper
 import time
 import json
 
-import config_test as config
+import config as config
 from . import Log
 from . import UserHelper
 from . import FileHelper

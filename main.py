@@ -6,7 +6,7 @@ import time
 import cgi
 import os
 
-import config_test as config
+import config as config
 import util.Log as Log
 from util.UserHelper import UserHelper
 import util.ParseAPI as ParseAPI

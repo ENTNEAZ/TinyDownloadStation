@@ -1,7 +1,7 @@
 from urllib import parse
 import util.UserHelper as UserHelper
 import time
-
+import json
 
 import config_test as config
 from . import Log
@@ -75,7 +75,7 @@ def getDownloadList(http, query: dict):
         http.send_response(200)
         http.send_header("Content-type", "application/json")
         http.end_headers()
-        http.wfile.write(str(fileList).encode())
+        http.wfile.write(json.dumps(fileList).encode('utf-8'))
     else:
         http.send_response(302)
         http.send_header("Content-type", "text/html")

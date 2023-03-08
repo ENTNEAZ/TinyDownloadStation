@@ -11,23 +11,71 @@
     <script src="/jslib/md5-2.18.0.min.js"></script>
 
     <script src="user/js/upload.js"></script>
-    <link rel="stylesheet" type="text/css" href="user/css/default.css">
-    <body style="min-width:1489px;max-width:1489px">
+    <link rel="stylesheet" type="text/css" href="/user/css/default.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/progress.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/uploadPart.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/filePart.css">
+
+    <body>
         <!--上传按钮-->
-    <div id="uploadPart">
-        <div class="upload">
-            <input type="file" id="file" name="file" onchange="upload()" />
+    <div id="main">
+        <div id="uploadPart">
+            <div class="upload">
+                上传文件
+                <input type="file" id="file" name="file" onchange="upload()" />
+            </div>
+            <div class="progress">
+                <div></div>
+            </div>
+            <div class="rate">
+                <span id="rateSpan" style="visibility: hidden;">0%</span>
+            </div>
+            <div class="speed" style="visibility: hidden;">
+                <span id="speedSpan">0KB/s</span>
+            </div>
         </div>
-        <div class="progress">
-            <div></div>
+        <div id="filePart">
+            <h3>可下载文件列表</h3>
+            <div id = "innerFilePart">
+
+            </div>
         </div>
-        <div class="rate">
-            <span>0%</span>
-        </div>
-        <div class="speed"><span>0KB/s</span></div>
-    </div>
-    <div id="filePart">
-        
     </div>
     </body>
 </html>
+<script>
+    function updateList(){
+        $.ajax({
+            url: "/api/getDownloadList",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                //clean div but not remove text
+                var filePart = document.getElementById("innerFilePart");
+                while(filePart.firstChild){
+                    filePart.removeChild(filePart.firstChild);
+                }
+
+                //add div
+                console.log(data);
+                var filePart = document.getElementById("innerFilePart");
+                for(var i = 0; i < data.length; i++){
+                    var file = data[i];
+                    var fileDiv = document.createElement("div");
+                    fileDiv.className = "file";
+                    var fileA = document.createElement("a");
+                    fileA.href = "/download/" + file;
+                    fileA.innerText = file;
+                    fileDiv.appendChild(fileA);
+                    filePart.appendChild(fileDiv);
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+    $(document).ready(function(){
+        updateList();
+    });
+</script>

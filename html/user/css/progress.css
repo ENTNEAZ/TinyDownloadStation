@@ -1,0 +1,19 @@
+.progress {
+    visibility:hidden;
+    width: 100%;
+    height: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 10px 0px;
+    overflow: hidden;
+ }
+
+
+ .progress > div {
+    visibility:hidden;
+    width: 0px;     
+    height: 100%;
+    background-color: #d45500;
+    transition: all .3s ease;
+ }
+ 

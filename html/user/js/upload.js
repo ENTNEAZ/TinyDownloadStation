@@ -1,5 +1,13 @@
 function upload(){
+    $(".progress").css("visibility", "visible");
+    $(".progress > div").css("visibility", "visible");
+    $(".progress > div").css("color", "yellowgreen");
     $('.progress > div').css('width', "0%");
+    $('#speedSpan').css("visibility", "visible");
+    $("#rateSpan").css("visibility", "visible");
+    $(".speed").css("visibility", "visible");
+    $(".rate").css("visibility", "visible");
+    $('.progress > div').css('background-color',"#d45500");
     var file = document.getElementById('file').files[0];
     var formdata = new FormData();
     formdata.append("file", file);
@@ -26,14 +34,15 @@ function upload(){
                 lastTime = nowTime;
                 lastSize = nowSize;
                 var speedStr = speed > 1024 ? (speed / 1024).toFixed(2) + 'MB/s' : speed.toFixed(2) + 'KB/s';
-                $('.speed').text(speedStr);
-                $(".rate").text((e.loaded / e.total).toFixed(2) * 100 + '%');
+                $('#speedSpan').text(speedStr);
+                $("#rateSpan").text((e.loaded / e.total).toFixed(2) * 100 + '%');
             })
 
             return xhr;
         },
         success: function (data) {
-            alert("Upload success!");
+            $('.progress > div').css('background-color',"#00d40b");
+            updateList();
         },
         error: function (data) {
             alert("Upload failed!");

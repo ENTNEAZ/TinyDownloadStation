@@ -1,0 +1,46 @@
+#uploadPart{
+    background-color: #ffffffb9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 10px;
+    padding: top 20px;
+}
+
+.upload{
+    width: 70px;
+    margin: auto;
+    margin-top: 20px;
+    padding: 10px;
+    line-height:30px;
+    position: relative;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 25px;
+    background-color:#3baaf4;
+    width: 120px;
+}
+
+.upload input{
+    position: absolute;
+    overflow: hidden;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+
+#speedSpan{
+    visibility: hidden;
+    font-size: 15px;
+    font-weight: bold;
+}
+#rateSpan{
+    visibility: hidden;
+    font-size: 15px;
+    font-weight: bold;
+}

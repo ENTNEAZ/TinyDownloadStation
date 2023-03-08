@@ -12,6 +12,8 @@ userCookieExpireTime = 60 * 60 * 24 * 7  # 7 days
 # log path
 logPath = 'log/'
 
+# save path
+savePath = '/opt/download/'
 # domain & port
 port = 443
 domain = ""

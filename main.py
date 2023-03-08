@@ -86,7 +86,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"404 Not Found")
                 return
-            with open('download/' + fileName, 'rb') as f:
+            with open(config.savePath + fileName, 'rb') as f:
                 ran = self.headers.get('Range')
                 if ran is None:
                     self.send_response(200)
@@ -97,7 +97,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.wfile.write(f.read())
                 else:
                     print(ran)
-                    fileSize = os.path.getsize("download/" + fileName)
+                    fileSize = os.path.getsize(config.savePath + fileName)
                     ran = ran.split('=')[1]
                     ran = ran.split('-')
                     ran[1] = int(ran[1]) if ran[1] != '' else fileSize - 1
@@ -153,8 +153,6 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 IP_addr = self.headers.get('Ali-CDN-Real-IP')
                 if IP_addr is None:
-                    IP_addr = self.headers.get('X-Forwarded-For')
-                if IP_addr is None:
                     IP_addr = self.headers.get('X-Real-IP')
                 if IP_addr is None:
                     IP_addr = self.client_address[0]
@@ -196,7 +194,7 @@ class Handler(BaseHTTPRequestHandler):
 
                 # save file
                 fileName = fileName.value
-                with open('download/' + fileName, 'wb') as f:
+                with open(config.savePath + fileName, 'wb') as f:
                     f.write(fileContent.file.read())
 
                 log.uploadLog(

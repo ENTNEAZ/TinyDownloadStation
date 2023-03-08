@@ -92,8 +92,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.send_response(200)
                     self.send_header(
                         "Content-type", "application/octet-stream")
-                    self.send_header("Content-Disposition",
-                                     "attachment; filename=" + fileName)
+                    self.send_header("Content-Disposition", "attachment")
                     self.end_headers()
                     self.wfile.write(f.read())
                 else:
@@ -104,10 +103,10 @@ class Handler(BaseHTTPRequestHandler):
                     ran[1] = int(ran[1]) if ran[1] != '' else fileSize - 1
                     ran[0] = int(ran[0]) if ran[0] != '' else fileSize - ran[1]
                     self.send_response(206)
+
                     self.send_header(
                         "Content-type", "application/octet-stream")
-                    self.send_header("Content-Disposition",
-                                     "attachment; filename=" + fileName)
+                    self.send_header("Content-Disposition", "attachment")
                     self.send_header(
                         "Content-Range", "bytes " + str(ran[0]) + "-" + str(ran[1]) + "/" + str(fileSize))
                     self.send_header("Accept-Ranges", "bytes")

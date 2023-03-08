@@ -12,5 +12,6 @@ userCookieExpireTime = 60 * 60 * 24 * 7  # 7 days
 # log path
 logPath = 'log/'
 
-# domain
+# domain & port
+port = 443
 domain = ""

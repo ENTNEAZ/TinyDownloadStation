@@ -30,7 +30,7 @@ def login(http, query: dict):
             ";domain=" + config.domain + \
             ";samesite=none;secure;expires=" + \
             time.strftime("%a, %d-%b-%Y %H:%M:%S GMT", time.gmtime(
-                time.time() + config.cookieExpireTime))
+                time.time() + config.userCookieExpireTime))
 
         http.send_header("Set-Cookie", cookie)
         http.send_header("Location", "/login/loginSuccess.html")
